@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -15,24 +15,72 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useNavigate } from "react-router-dom";
+
+import { ToastContainer, toast } from 'react-toastify';
+
+import { apiRequest } from "../../../../utils/api"; // Import helper API
+import CryptoJS from "crypto-js";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const data = await apiRequest("http://localhost:8000/api/login", "POST", {
+        email,
+        password
+      });
+      setTimeout(() => {
+        navigate('/dashboard')
+      }, 1500);      
+      getData(data.token)
+    } catch (error) {
+      toast.error(error.messages);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getData = async (tokens) => {
+    setLoading(true);
+
+    try {
+      const data = await apiRequest("http://localhost:8000/api/user", "POST", null,  tokens);
+
+      const decryptedToken = CryptoJS.AES.encrypt(tokens, "SECRET_KEY").toString();
+      localStorage.setItem("token_", decryptedToken); // Simpan token terenkripsi
+      console.log(decryptedToken)      
+    } catch (error) {
+      toast.error(error.messages);
+    }
+  };
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
+      <ToastContainer />
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleLogin}>
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput placeholder="Username" 
+                      autoComplete="username"
+                      onChange={(e) => setEmail(e.target.value)}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,13 +90,12 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                       onChange={(e) => setPassword(e.target.value)} 
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
-                          Login
-                        </CButton>
+                        <CButton color="primary" type="submit" disabled={loading}>{loading ? "Loading..." : "Login"}</CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
