@@ -34,12 +34,12 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const data = await apiRequest("http://localhost:8000/api/login", "POST", {
+      const data = await apiRequest("login", "POST", {
         email,
         password
       });
       setTimeout(() => {
-        navigate('/dashboard')
+        navigate('/dashboard2')
       }, 1500);      
       getData(data.token)
     } catch (error) {
@@ -53,7 +53,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const data = await apiRequest("http://localhost:8000/api/user", "POST", null,  tokens);
+      const data = await apiRequest("user", "POST", null,  tokens);
 
       const decryptedToken = CryptoJS.AES.encrypt(tokens, "SECRET_KEY").toString();
       localStorage.setItem("token_", decryptedToken); // Simpan token terenkripsi

@@ -1,27 +1,16 @@
 import React from 'react'
 import {
   CAvatar,
-  CBadge,
   CDropdown,
-  CDropdownDivider,
   CDropdownHeader,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
 } from '@coreui/react'
 import {
-  cilBell,
-  cilCreditCard,
-  cilCommentSquare,
-  cilEnvelopeOpen,
-  cilFile,
   cilLockLocked,
-  cilSettings,
-  cilTask,
-  cilUser,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import CryptoJS from "crypto-js";
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { apiRequest } from "../../../utils/api"; // Import helper API
@@ -36,7 +25,7 @@ const AppHeaderDropdown = () => {
     removeUser()    
 
     try {
-      const data = await apiRequest("http://localhost:8000/api/logout", "POST", null, getTokens());
+      const data = await apiRequest("logout", "POST", null, getTokens());
       localStorage.removeItem('token_')
       toast.success(data.messages);
       setTimeout(() => {

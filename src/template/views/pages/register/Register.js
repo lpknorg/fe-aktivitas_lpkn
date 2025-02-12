@@ -32,7 +32,7 @@ const Register = () => {
 
     try {
       const role = 'Pegawai'
-      const data = await apiRequest("http://localhost:8000/api/register", "POST", {
+      await apiRequest("register", "POST", {
         name,
         email,
         password,

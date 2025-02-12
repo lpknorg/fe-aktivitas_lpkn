@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import classNames from 'classnames'
 import {
   CButton,
   CCard,
@@ -13,11 +12,10 @@ import {
   CFormTextarea,
   CFormSelect
 } from '@coreui/react'
-import { DocsComponents, DocsExample } from '../template/components'
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { apiRequest } from "../utils/api"; // Import helper API
-import { getUser, getTokens} from "../utils/userStorage";
+import { getTokens} from "../utils/userStorage";
 
 const AktivitasAdd = () => {
   const [judul, setJudul] = useState("");
@@ -34,15 +32,14 @@ const AktivitasAdd = () => {
 
     try {
       const token  = getTokens()
-      const data = await apiRequest("http://localhost:8000/api/aktivitas-kerja", "POST", {
+      const data = await apiRequest("aktivitas-kerja", "POST", {
         judul,
         deskripsi,
         kategori,
         waktu_mulai,
-        waktu_selesai,
-        kategori
+        waktu_selesai
       }, token);
-      if (data.status == 'ok') {
+      if (data.status === 'ok') {
         setTimeout(() => {
           navigate('/aktivitas')
         }, 1500);      

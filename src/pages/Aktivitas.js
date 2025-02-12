@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import classNames from 'classnames'
 import {
   CButton,
   CCard,
@@ -9,20 +8,17 @@ import {
   CRow,
   CTable,
   CTableBody,
-  CTableCaption,
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { DocsComponents, DocsExample } from '../template/components'
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../utils/api"; // Import helper API
 import { getTokens} from "../utils/userStorage";
 import { toast } from 'react-toastify';
 
 const Aktivitas = () => {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [aktivitas, setAktivitas] = useState([]);
 
@@ -34,12 +30,12 @@ const Aktivitas = () => {
     const fetchDataAktivitas = async () => {
       try {
         const token  = getTokens()
-        const data = await apiRequest("http://localhost:8000/api/aktivitas-kerja", "GET", null, token);
+        const data = await apiRequest("aktivitas-kerja", "GET", null, token);
         setAktivitas(data)        
       } catch (error) {
         toast.error(error.messages);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
