@@ -19,9 +19,16 @@ export const apiRequest = async (url, method = "GET", body = null, token = null)
       options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(url, options);
+    const response = await fetch(url, options);    
     const code = response.status
-    if (code > 200 && code != 422) {
+    if (code == 401) {
+      toast.error(`Akun belum login, silakan login kembali`)
+      setTimeout(() => {
+        window.location.href = '/#/login'
+      },1500)
+      throw new Error(data.messages || `Error, code: ${code}`);      
+    }
+    if (code == 500) {
       toast.error(`Terjadi kesalahan, code: ${code}`)
       throw new Error(data.messages || `Error, code: ${code}`);
     }

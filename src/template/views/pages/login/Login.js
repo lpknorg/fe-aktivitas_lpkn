@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 
 import { apiRequest } from "../../../../utils/api"; // Import helper API
+import { saveUser } from "../../../../utils/userStorage";
 import CryptoJS from "crypto-js";
 
 const Login = () => {
@@ -56,6 +57,7 @@ const Login = () => {
 
       const decryptedToken = CryptoJS.AES.encrypt(tokens, "SECRET_KEY").toString();
       localStorage.setItem("token_", decryptedToken); // Simpan token terenkripsi
+      saveUser(data)
       console.log(decryptedToken)      
     } catch (error) {
       toast.error(error.messages);

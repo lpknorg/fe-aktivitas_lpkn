@@ -27,18 +27,17 @@ import avatar8 from './../../assets/images/avatars/8.jpg'
 import { apiRequest } from "../../../utils/api"; // Import helper API
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import { removeUser, getTokens } from "../../../utils/userStorage";
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate();
 
   const handleLogout = async (tokens) => {
-    const encryptedToken = localStorage.getItem("token_");
-    if (!encryptedToken) return null;
-    const encToken = CryptoJS.AES.decrypt(encryptedToken, "SECRET_KEY").toString(CryptoJS.enc.Utf8);
-    console.log(encToken)
+    removeUser()    
 
     try {
-      const data = await apiRequest("http://localhost:8000/api/logout", "POST", null, encToken);
+      const data = await apiRequest("http://localhost:8000/api/logout", "POST", null, getTokens());
+      localStorage.removeItem('token_')
       toast.success(data.messages);
       setTimeout(() => {
         navigate('/login')
