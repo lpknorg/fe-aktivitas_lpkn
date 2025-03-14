@@ -1,5 +1,5 @@
-import { toast } from 'react-toastify';
-import {API_BASE_URL} from '../config'
+import { toast } from "react-toastify";
+import { API_BASE_URL } from "../config";
 // src/utils/api.js
 export const apiRequest = async (params, method = "GET", body = null, token = null) => {
   const controller = new AbortController(); // Untuk timeout
@@ -43,7 +43,7 @@ export const apiRequest = async (params, method = "GET", body = null, token = nu
       throw new Error("Unauthorized (401)");
     }
 
-    if (code === 500) {
+    if (code === 500 || code == 405) {
       toast.error(`Terjadi kesalahan pada server, kode: ${code}`);
       throw new Error("Internal Server Error (500)");
     }
@@ -55,7 +55,7 @@ export const apiRequest = async (params, method = "GET", body = null, token = nu
       throw new Error("Gagal memproses respons dari server.");
     }
 
-    if (data?.status === "fail") {
+    if (data?.status === "fail" || code == "422") {
       toast.error(data.messages || "Terjadi kesalahan pada API.");
       throw new Error(data.messages || "API Error");
     }
